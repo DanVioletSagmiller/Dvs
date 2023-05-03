@@ -16,7 +16,7 @@ namespace Dvs.ObservableLocator
 
         private class Reference<T>
         {
-            public Action<T> OnChange;
+            public Action<T> OnChange = (t) => {};
 
             public T Value { get; set; }
 
@@ -87,7 +87,7 @@ namespace Dvs.ObservableLocator
         public static void Set<I, T>() where T : I
         {
             // if the type is a MonoBehaviour, create a game object to hold it. 
-            if (typeof(T).IsAssignableFrom(typeof(MonoBehaviour)))
+            if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
                 Set<I>(() =>
                 {
@@ -103,7 +103,7 @@ namespace Dvs.ObservableLocator
             }
 
             // if the type is a ScriptableObject, properly create the instance.
-            if (typeof(T).IsAssignableFrom(typeof(ScriptableObject)))
+            if (typeof(ScriptableObject).IsAssignableFrom(typeof(T)))
             {
                 Set<I>(() =>
                 {
@@ -131,8 +131,8 @@ namespace Dvs.ObservableLocator
             // check there is a potential value
             if (reference.State == ReferenceType.NotSetup) return;
 
-            // check there are listeners (there is a default
-            if (reference.OnChange.GetInvocationList().Length == 0) return;
+            // check there are listeners (there is a default)
+            if (reference.OnChange.GetInvocationList().Length ==1) return;
 
             if (reference.State == ReferenceType.HasConstructor)
             {
