@@ -102,12 +102,12 @@ namespace Dvs.ObservableLocator
         /// <remarks>If T is Scriptable, a new Scriptable Instance will be generated and reused.
         /// If T is Component, a new GameObject "[TypeName]-LocatorInstantiated" will be generated to hold it on construction.
         ///  - the gameobject will also be given a LocatorInstanceCleanup script to notify Locator of its removal.</remarks>
-        public static void Set<I, T>() where T : I
+        public static void Set<I, T>() where T : class, I
         {
             // if the type is a MonoBehaviour, create a game object to hold it. 
             if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
-                Set<I>(() =>
+                SetConstructor<I>(() =>
                 {
                     var go = new GameObject(typeof(T).Name + "-LocatorInstantiated");
                     T component = (T)(object)go.AddComponent(typeof(T));
@@ -123,7 +123,7 @@ namespace Dvs.ObservableLocator
             // if the type is a ScriptableObject, properly create the instance.
             if (typeof(ScriptableObject).IsAssignableFrom(typeof(T)))
             {
-                Set<I>(() =>
+                SetConstructor<I>(() =>
                 {
                     return (T)(object)ScriptableObject.CreateInstance(typeof(T));
                 });
@@ -132,10 +132,10 @@ namespace Dvs.ObservableLocator
             }
 
             // if nothing else handled it use of Activator to construct the instance.
-            Set<I>(() => { return System.Activator.CreateInstance<T>(); });
+            SetConstructor<I>(() => { return System.Activator.CreateInstance<T>(); });
         }
 
-        public static void Set<T>(System.Func<T> function)
+        public static void SetConstructor<T>(System.Func<T> function)
         {
             var key = typeof(T);
             var reference = GetReference<T>();

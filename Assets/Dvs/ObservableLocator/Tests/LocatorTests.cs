@@ -53,7 +53,7 @@ public class LocatorTests
     public void HasReference_WithConstructorSet_ReturnsTrue()
     {
         // Arrange
-        Locator.Set<string>(() => "Has a value");
+        Locator.SetConstructor<string>(() => "Has a value");
 
         // Act
         var actual = Locator.HasReference<string>();
@@ -67,7 +67,7 @@ public class LocatorTests
     {
         // Arrange
         bool actual = true;
-        Locator.Set<string>(() =>
+        Locator.SetConstructor<string>(() =>
         {
             actual = false;
             return "";
