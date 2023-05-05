@@ -1,38 +1,38 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 
-namespace Dvs.EventHandler
+namespace Dvs.EventsManager
 {
-    public static class EventHandler
+    public static class Events
     {
         private static Dictionary<Type, Action> Listeners
             = new Dictionary<Type, Action>();
 
-        private static Action GetAction<T>()
+        private static void Setup<T>()
         {
-            var key = typeof(T);
-            if (Listeners.ContainsKey(key)) return Listeners[key];
+            if (Listeners.ContainsKey(typeof(T))) return;
 
             Action action = () => { };
-            Listeners[key] = action;
-            return action;
+            Listeners[typeof(T)] = action;
         }
 
         public static void ListenTo<T>(Action listener)
         {
-            var action = GetAction<T>();
-            action += listener;
+            Setup<T>();
+            Listeners[typeof(T)] += listener;
         }
 
         public static void StopListeningTo<T>(Action listener)
         {
-            var action = GetAction<T>();
-            action -= listener;
+            Setup<T>();
+            Listeners[typeof(T)] -= listener;
         }
 
         public static void Trigger<T>()
         {
-            GetAction<T>()();
+            Setup<T>();
+            Listeners[typeof(T)].Invoke();
         }
     }
 }
