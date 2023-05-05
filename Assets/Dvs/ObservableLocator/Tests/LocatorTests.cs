@@ -104,7 +104,7 @@ public class LocatorTests
         var actual = Locator.HasReference<string>();
 
         // Assert
-        Assert.IsTrue(actual, "Locator was setup with a constructor for the type requested, HasReference should have returned true");
+        Assert.IsFalse(actual, "HasReference returned True, when its value was set to null. Null does not count as a value.");
     }
 
     [Test]
@@ -162,44 +162,72 @@ public class LocatorTests
     public void Observe_WhenSetGivenSameValue_IsNotNotified()
     {
         // Arrange
+        int observeCount = 0;
+        int expectedCount = 1;
+        LocatorScriptable obj = ScriptableObject.CreateInstance<LocatorScriptable>();
+        Locator.Observe<LocatorScriptable>((s) => observeCount++);
+        Locator.Set<LocatorScriptable>(obj);
 
         // Act
+        Locator.Set<LocatorScriptable>(obj);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expectedCount, observeCount, 
+            "Set was given the same value twice. Since it did not change on Set, it should have only notified observers once.");
     }
 
     [Test]
-    public void Observe_WithMultipleObservesSetup_CallsEachObserverOnSet()
+    public void Set_WithMultipleObservesSetup_CallsEachObserverOnSet()
     {
         // Arrange
+        bool called1 = false;
+        bool called2 = false;
+        Locator.Observe<int>((int s) => called1 = true);
+        Locator.Observe<int>((int s) => called2 = true);
 
         // Act
+        Locator.Set<int>(instance: 100);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.IsTrue(called1, message: "The first observable did not get called when a value was passed in.");
+        Assert.IsTrue(called2, message: "The second observable did not get called when a value was passed in.");
     }
 
     [Test]
-    public void Observe_OnceStopObservingCalled_CancelsThatObserver()
+    public void Set_WithAStoppedObserver_WillNotCallThatObserver()
     {
         // Arrange
+        int expected = 0;
+        int actual = 0;
+        Action<int> action = (i) => actual = i;  
+        Locator.Observe<int>(action);
+        Locator.StopObserving<int>(action);
 
         // Act
+        Locator.Set<int>(instance: 1001);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expected, actual,
+            message: "An Observer was setup and then stopped. It should never have been called.");
     }
 
     [Test]
     public void Observe_WhenStopObserviceCalledOnADifferentObserve_WillStillBeCalledOnSet()
     {
         // Arrange
+        int expected = 1;
+        int actual = 0;
+        Action<int> action = (i) => { };
+        Locator.Observe<int>((i) => actual++);
+        Locator.Observe<int>(action);
+        Locator.StopObserving<int>(action);
 
         // Act
+        Locator.Set<int>(1001);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expected, actual,
+            message: "An Observer was stopped but another observer was still setup. Set with a new value did not trigger the remaining observer.");
     }
     
     [Test]
@@ -256,32 +284,54 @@ public class LocatorTests
     public void Set_WithNullOnFirstCall_WillNotCallObservers()
     {
         // Arrange
+        int expected = 0;
+        int actual = 0;
+        Locator.Observe<int>((int s) => actual++);
 
         // Act
+        Locator.Set<string>(instance: null);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expected, actual, 
+            message: "An Observable was called when the value was set to null. "
+            + "Specifically, the value was never set before, so null should technically still not be "
+            + "setup and should not have been seen as a change in state.");
     }
 
     [Test]
     public void Set_WithNullAfterSetWithValue_WillCallObservers()
     {
         // Arrange
+        int expected = 0;
+        int actual = 0;
+        Locator.Observe<LocatorBehaviour>((LocatorBehaviour s) => actual++);
+        Locator.Set<LocatorBehaviour>(instance: null);
 
         // Act
+        Locator.Set<LocatorBehaviour>(instance: null);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expected, actual,
+            message: "Setting null a second time should not have triggered a notification event.");
     }
 
     [Test]
     public void Set_WithNullAfterSetWithNull_WillNotCallObservers()
     {
         // Arrange
+        int expected = 2;
+        int actual = 0;
+        GameObject go = new GameObject();
+        LocatorBehaviour lb = go.AddComponent<LocatorBehaviour>();
+        Locator.Observe<LocatorBehaviour>((LocatorBehaviour s) => actual++ );
+        Locator.Set<LocatorBehaviour>(instance: lb);
 
         // Act
+        Locator.Set<LocatorBehaviour>(instance: null);
 
         // Assert
-        throw new NotImplementedException();
+        Assert.AreEqual(expected, actual,
+            message: "Setting null on a reference that previously had a value should have trigged the observer. "
+            + "In this test, that would show up as being called twice, as the first one was for the value being set in the first place.");
     }
 }
