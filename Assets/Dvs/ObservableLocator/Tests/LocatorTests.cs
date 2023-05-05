@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Dvs.ObservableLocator;
@@ -94,6 +95,19 @@ public class LocatorTests
     }
 
     [Test]
+    public void HasReference_WhenSetNull_ReturnsFalse()
+    {
+        // Arrange
+        Locator.Set<string>(null);
+
+        // Act
+        var actual = Locator.HasReference<string>();
+
+        // Assert
+        Assert.IsTrue(actual, "Locator was setup with a constructor for the type requested, HasReference should have returned true");
+    }
+
+    [Test]
     public void Observe_WhenTypeNotSetup_DoesNothing()
     {
         // Arrange
@@ -145,6 +159,50 @@ public class LocatorTests
     }
 
     [Test]
+    public void Observe_WhenSetGivenSameValue_IsNotNotified()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Observe_WithMultipleObservesSetup_CallsEachObserverOnSet()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Observe_OnceStopObservingCalled_CancelsThatObserver()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Observe_WhenStopObserviceCalledOnADifferentObserve_WillStillBeCalledOnSet()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+    
+    [Test]
     public void Set_WhenNewReferenceSet_UpdatesAllTheCalls()
     {
         // Arrange
@@ -194,5 +252,36 @@ public class LocatorTests
         Debug.Log(actual.gameObject.name);
     }
 
+    [Test]
+    public void Set_WithNullOnFirstCall_WillNotCallObservers()
+    {
+        // Arrange
 
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Set_WithNullAfterSetWithValue_WillCallObservers()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Set_WithNullAfterSetWithNull_WillNotCallObservers()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        throw new NotImplementedException();
+    }
 }

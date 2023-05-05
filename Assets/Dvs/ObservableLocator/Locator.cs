@@ -89,9 +89,24 @@ namespace Dvs.ObservableLocator
         public static void Set<T>(T instance)
         {
             var reference = GetReference<T>();
+
+            bool valueChanged = false;
+            if (instance != null && !instance.Equals(reference.Value)) valueChanged = true;
+            if (reference.Value != null && !reference.Value.Equals(instance)) valueChanged = true;
+
             reference.Value = instance;
-            reference.State = ReferenceType.HasValue;
-            TryToAnnounceChange(reference);
+
+            if (instance != null)
+            {
+                reference.State = ReferenceType.HasValue;
+                if (valueChanged) TryToAnnounceChange(reference);
+            }
+            else
+            {
+                bool hadValue = reference.State != ReferenceType.NotSetup;
+                reference.State = ReferenceType.NotSetup;
+                if (hadValue) TryToAnnounceChange(reference, true);
+            }
         }
 
         /// <summary>
@@ -144,10 +159,10 @@ namespace Dvs.ObservableLocator
             TryToAnnounceChange(reference);
         }
 
-        private static void TryToAnnounceChange<T>(Reference<T> reference)
+        private static void TryToAnnounceChange<T>(Reference<T> reference, bool skipNotSetup = false)
         {
             // check there is a potential value
-            if (reference.State == ReferenceType.NotSetup) return;
+            if (reference.State == ReferenceType.NotSetup && !skipNotSetup) return;
 
             // check there are listeners (there is a default)
             if (reference.OnChange.GetInvocationList().Length ==1) return;
