@@ -1,4 +1,4 @@
-﻿namespace Dvs.ObservableLocator
+﻿namespace Dvs
 {
     using System;
     using UnityEngine;

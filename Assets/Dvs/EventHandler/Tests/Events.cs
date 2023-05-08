@@ -1,4 +1,4 @@
-using Dvs.EventsManager;
+using Dvs;
 using NUnit.Framework;
 using System;
 

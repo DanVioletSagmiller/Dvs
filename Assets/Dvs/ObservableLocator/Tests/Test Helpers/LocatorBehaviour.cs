@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Dvs.ObservableLocator
+namespace Dvs
 {
     public class LocatorBehaviour : MonoBehaviour
     {
