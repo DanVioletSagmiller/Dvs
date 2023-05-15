@@ -45,7 +45,8 @@ public class LocatorTests
         var actual = Locator.HasReference<string>();
 
         // Assert
-        Assert.IsTrue(actual, "Locator was setup with the type requested, HasReference should have returned true");
+        Assert.IsTrue(actual, "Locator was setup with the type requested, "
+            + "HasReference should have returned true");
     }
 
     [Test] 

@@ -1,10 +1,10 @@
 {
-    "name": "Dvs.Events.Tests",
+    "name": "Dvs.TestPattern.Tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Dvs.EventHandler"
+        "Dvs.TestPattern"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
