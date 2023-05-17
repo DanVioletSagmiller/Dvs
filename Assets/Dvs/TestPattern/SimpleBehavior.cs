@@ -8,12 +8,6 @@ public class SimpleBehavior : MonoBehaviour
 
     public bool StartHappened = false;
 
-    public bool AwakeHappened = false;
-
-    public void Awake()
-    {
-        AwakeHappened = true;
-    }
 
     public void Start()
     {

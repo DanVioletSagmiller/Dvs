@@ -35,12 +35,12 @@ public class SimpleBehaviourTests
 
         // Assert
         Assert.IsTrue(subject.StartHappened,
-            "One Frame passed, the SimpleBehaaviour should have StartHappened set to true.");
+            "One Frame passed, the SimpleBehaviour should have StartHappened set to true.");
     }
 
 
     [Test]
-    public void Object_OnAddingComponent_StartAndFirstFrameAreFalse_AwakeIsTrue()
+    public void Object_OnAddingComponent_StartAndFirstFrameAreFalse()
     {
         // Arrance
         var go = new GameObject();
