@@ -2,7 +2,7 @@ using Dvs;
 using NUnit.Framework;
 using System;
 
-public class EventsManagerTests
+public class EventsTests
 {
     [Test]
     public void Trigger_WithListener_CallsListener()
@@ -10,10 +10,10 @@ public class EventsManagerTests
         // Arrange
         int expected = 1;
         int actual = 0;
-        Events.ListenTo<int>(() => actual++);
+        Events.ListenTo<int>((int i) => actual++);
 
         // Act
-        Events.Trigger<int>();
+        Events.Trigger<int>(0);
 
         // Assert
         Assert.AreEqual(expected, actual,
@@ -26,11 +26,11 @@ public class EventsManagerTests
         // Arrange
         int expected = 2;
         int actual = 0;
-        Events.ListenTo<int>(() => actual++);
+        Events.ListenTo<int>((int value) => actual++);
 
         // Act
-        Events.Trigger<int>();
-        Events.Trigger<int>();
+        Events.Trigger<int>(value: 0);
+        Events.Trigger<int>(value: 0);
 
         // Assert
         Assert.AreEqual(expected, actual,
@@ -43,12 +43,12 @@ public class EventsManagerTests
         // Arrange
         int expected = 0;
         int actual = 0;
-        Action a = () => actual++;
+        Action<int> a = (int i) => actual++;
         Events.ListenTo<int>(a);
         Events.StopListeningTo<int>(a);
 
         // Act
-        Events.Trigger<int>();
+        Events.Trigger<int>(value: 0);
 
         // Assert
         Assert.AreEqual(expected, actual,
@@ -63,11 +63,11 @@ public class EventsManagerTests
         int actual1 = 0;
         int actual2 = 0;
         
-        Events.ListenTo<int>(() => actual1++);
-        Events.ListenTo<int>(() => actual2++);
+        Events.ListenTo<int>((int i) => actual1++);
+        Events.ListenTo<int>((int i) => actual2++);
 
         // Act
-        Events.Trigger<int>();
+        Events.Trigger<int>(value: 0);
 
         // Assert
         Assert.AreEqual(expected, actual1,
@@ -82,13 +82,13 @@ public class EventsManagerTests
         // Arrange
         int expected = 1;
         int actual = 0;
-        Events.ListenTo<int>(() => actual++);
-        Action a = () => actual++;
+        Events.ListenTo<int>((int i) => actual++);
+        Action<int> a = (int i) => actual++;
         Events.ListenTo<int>(a);
         Events.StopListeningTo<int>(a);
 
         // Act
-        Events.Trigger<int>();
+        Events.Trigger<int>(value: 0);
 
         // Assert
         Assert.AreEqual(expected, actual,
@@ -100,7 +100,7 @@ public class EventsManagerTests
     {
         // Arrange
         // Act
-        Events.Trigger<int>();
+        Events.Trigger<int>(value: 0);
         // Assert
 
     }
@@ -109,7 +109,7 @@ public class EventsManagerTests
     public void StopListeningTo_GivenTheSameThingTwice_DoesNotError()
     {
         // Arrange
-        Action a = () => { };
+        Action<int> a = (int i) => { };
         Events.ListenTo<int>(a);
         Events.StopListeningTo<int>(a);
 
@@ -123,11 +123,43 @@ public class EventsManagerTests
     public void StopListeningTo_WhenListenerNeverRequested_DoesNotError()
     {
         // Arrange
-        Action a = () => { };
+        Action<int> a = (int i) => { };
 
         // Act
         Events.StopListeningTo<int>(a);
 
         // Assert
+    }
+
+    [Test]
+    public void Trigger_WithValue_PassesValue()
+    {
+        // Arrange
+        int expected = 1;
+        int actual = 0;
+        Events.ListenTo<int>((int i) => actual = i);
+
+        // Act
+        Events.Trigger<int>(expected);
+
+        // Assert
+        Assert.AreEqual(expected, actual,
+            message: "The listener should have passed the same value that was passed in.");
+    }
+
+    [Test]
+    public void Trigger_WithNullValue_PassesValue()
+    {
+        // Arrange
+        string expected = null;
+        string actual = "";
+        Events.ListenTo<string>((string i) => actual = i);
+
+        // Act
+        Events.Trigger<string>(expected);
+
+        // Assert
+        Assert.AreEqual(expected, actual,
+            message: "The listener should have recieved a null value when trigger was called with null.");
     }
 }

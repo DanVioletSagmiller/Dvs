@@ -24,33 +24,38 @@ namespace Dvs
 
     public static class Events
     {
-        private static Dictionary<Type, Action> Listeners
-            = new Dictionary<Type, Action>();
+        private static Dictionary<Type, object> Listeners
+            = new Dictionary<Type, object>();
 
         private static void Setup<T>()
         {
             if (Listeners.ContainsKey(typeof(T))) return;
 
-            Action action = () => { };
+            Action<T> action = (T t) => { };
             Listeners[typeof(T)] = action;
         }
 
-        public static void ListenTo<T>(Action listener)
+        public static void ListenTo<T>(Action<T> listener)
         {
             Setup<T>();
-            Listeners[typeof(T)] += listener;
+            Action<T> action = (Action<T>)Listeners[typeof(T)];
+            action += listener;
+            Listeners[typeof(T)] = action;
         }
 
-        public static void StopListeningTo<T>(Action listener)
+        public static void StopListeningTo<T>(Action<T> listener)
         {
             Setup<T>();
-            Listeners[typeof(T)] -= listener;
+            Action<T> action = (Action<T>)Listeners[typeof(T)];
+            action -= listener;
+            Listeners[typeof(T)] = action;
         }
 
-        public static void Trigger<T>()
+        public static void Trigger<T>(T value)
         {
             Setup<T>();
-            Listeners[typeof(T)].Invoke();
+            Action<T> action = (Action<T>)Listeners[typeof(T)];
+            action(value);
         }
     }
 }

@@ -11,10 +11,8 @@ public class SimpleFunctionTests
     {
         // Arrance
         // Act
-        SimpleFunction subject = new SimpleFunction();
-
         // Assert
-        Assert.AreEqual(expected: 0, subject.Value, 
+        Assert.AreEqual(expected: 0, (new SimpleFunction()).Value, 
             message: "It was expected that the value would be 0 on initialization, but it was not.");
     }
 
