@@ -6,8 +6,25 @@ using UnityEngine.TestTools;
 
 public class SimpleBehaviourTests
 {
+    [Test]
+    public void Construct_OnAddingComponent_StartAndFirstFrameAreFalse()
+    {
+        // Arrance
+        var go = new GameObject();
+
+        // Act
+        SimpleBehavior subject = go.AddComponent<SimpleBehavior>();
+
+        // Assert
+        Assert.IsFalse(subject.StartHappened,
+            "Object was just constructed, the SimpleBehaviour should have StartHappened set to false.");
+
+        Assert.IsFalse(subject.FirstFrameHappened,
+            "Object was just constructed, the SimpleBehaviour should have FirstFrameHappened set to false.");
+    }
+
     [UnityTest]
-    public IEnumerator Object_OnFirstFrame_SetsFirstFrameHappenedToTrue()
+    public IEnumerator Object_OnFirstFrame_SetsStartAndFirstFrameHappenedToTrue()
     {
         // Arrance
         var go = new GameObject();
@@ -18,42 +35,10 @@ public class SimpleBehaviourTests
         yield return null; // Now First Frame Happened. 
 
         // Assert
-        Assert.IsTrue(subject.FirstFrameHappened, 
-            "One Frame Update was allowed to trigger, the SimpleBehaaviour should have set FirstFrameHappened to true.");
-    }
-
-    [UnityTest]
-    public IEnumerator Object_OnFirstFrame_SetsStartHappenedToTrue()
-    {
-        // Arrance
-        var go = new GameObject();
-        SimpleBehavior subject = go.AddComponent<SimpleBehavior>();
-
-        // Act
-        // Already awake
-        yield return null; // 1 Frame In
-
-        // Assert
         Assert.IsTrue(subject.StartHappened,
             "One Frame passed, the SimpleBehaviour should have StartHappened set to true.");
-    }
 
-
-    [Test]
-    public void Object_OnAddingComponent_StartAndFirstFrameAreFalse()
-    {
-        // Arrance
-        var go = new GameObject();
-
-        // Act
-        SimpleBehavior subject = go.AddComponent<SimpleBehavior>();
-
-        // Assert
-        Assert.IsFalse(subject.StartHappened,
-            "Object was just constructed, the SimpleBehaaviour should have StartHappened set to false.");
-        Assert.IsFalse(subject.FirstFrameHappened,
-            "Object was just constructed, the SimpleBehaaviour should have FirstFrameHappened set to false.");
-        Assert.IsFalse(subject.FirstFrameHappened,
-            "Object was just constructed, the SimpleBehaaviour should have FirstFrameHappened set to false.");
+        Assert.IsTrue(subject.FirstFrameHappened, 
+            "One Frame Update was allowed to trigger, the SimpleBehaviour should have set FirstFrameHappened to true.");
     }
 }
