@@ -1,3 +1,16 @@
 {
-	"name": "Dvs.TestPattern"
+    "name": "Dvs.TestPattern",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3502b799f63138542b1d86f51efb7eaf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

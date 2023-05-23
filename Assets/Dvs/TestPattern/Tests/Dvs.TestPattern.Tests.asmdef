@@ -4,14 +4,17 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Dvs.TestPattern"
+        "Dvs.TestPattern",
+        "Dvs.ObservableLocator"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Moq.dll",
+        "Castle.Core.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

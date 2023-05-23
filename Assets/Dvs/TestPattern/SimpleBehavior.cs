@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SimpleBehavior : MonoBehaviour 
@@ -7,7 +5,6 @@ public class SimpleBehavior : MonoBehaviour
     public bool FirstFrameHappened = false;
 
     public bool StartHappened = false;
-
 
     public void Start()
     {
@@ -19,3 +16,8 @@ public class SimpleBehavior : MonoBehaviour
         FirstFrameHappened = true;
     }
 }
+
+
+
+
+
